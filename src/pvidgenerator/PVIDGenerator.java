@@ -8,10 +8,20 @@ import java.util.*;
 
 public class PVIDGenerator {
 
+	private static PVIDGenerator instance = null;
+	
 	Authorizer authorizer;
 	Map<String, String> emailIdToPasskeyMap;
 	
-	public PVIDGenerator(Authorizer authorizer, Map<String, String> emailIdToPasskeyMap) {
+	public static PVIDGenerator getInstance(Authorizer authorizer, Map<String, String> emailIdToPasskeyMap) {
+		
+		if(instance == null) 
+			instance = new PVIDGenerator(authorizer, emailIdToPasskeyMap);
+		
+		return instance;
+	}
+	
+	private PVIDGenerator(Authorizer authorizer, Map<String, String> emailIdToPasskeyMap) {
 		this.authorizer=authorizer;
 		this.emailIdToPasskeyMap=emailIdToPasskeyMap;
 	}
