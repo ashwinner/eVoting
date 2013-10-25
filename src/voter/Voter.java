@@ -35,7 +35,7 @@ public class Voter {
 	case 1 ://generate PVID
 		System.out.println("Generate PVID option selected");
 		System.out.println("Enter your nitc email ID ");
-		String email_id = this.getEmailId();
+		String email_id = reader.readLine();
 		System.out.println("Enter your pin/passkey");
 		String pin = reader.readLine();
 		
@@ -67,14 +67,6 @@ public class Voter {
 	
 
 }
-	private String getEmailId() throws IOException {
-		String emailId=reader.readLine();
-			if(!emailId.contains("@")) {
-				System.out.println("Invalid Email! Please Reenter!");
-				return getEmailId();
-		}
-		return null;
-	}
 
 	private void displayBallot(List<String> ballot) {
 		
