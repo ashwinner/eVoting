@@ -1,8 +1,13 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 public class FileOperations {
@@ -51,4 +56,16 @@ public class FileOperations {
 		reader.close();
 		return candidateList;
 	}
+	
+	public static void saveCollectorBullettinBoard(String filename,Serializable object) throws IOException{
+		FileOutputStream fileOut = new FileOutputStream(filename);
+		ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		out.writeObject(object);
+		out.close();
+		fileOut.close();
+	}
+	
+	
+	
+	
 }
