@@ -23,7 +23,7 @@ public class Main {
 	//Map<String, String> emailIdToPasskeyMap = FileOperations.createEmailToPasskeyMap(args[1]);
 	
 	//Authorizer authorizer = Authorizer.getInstance();
-	//PVIDGenerator pvidGenerator = PVIDGenerator.getInstance(authorizer, emailIdToPasskeyMap);
+	//PVIDGenerator pvidGenerator = PVIDGenerator.getInstance(emailIdToPasskeyMap);
 	BallotGenerator ballotGenerator=BallotGenerator.getInstance(candidateList);
 	Collector collector=Collector.getInstance();
 	

@@ -1,18 +1,22 @@
 package voter;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import pvidgenerator.PVIDGenerator;
+import utils.Essentials;
 import collector.Collector;
+import collector.CollectorBullettinBoard;
 import exceptions.InvalidPinException;
 import ballotgenerator.BallotGenerator;
 
 public class Voter {
 	
-	PVIDGenerator pvidGenerator;
-	BallotGenerator ballotGenerator;
-	Collector collector;
+	private PVIDGenerator pvidGenerator;
+	private BallotGenerator ballotGenerator;
+	private Collector collector;
+	private CollectorBullettinBoard collectorBullettinBoard;
 	
 	private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	
@@ -20,9 +24,10 @@ public class Voter {
 		//this.pvidGenerator=pvidGenerator;
 		this.ballotGenerator=ballotGenerator;
 		this.collector=collector;
+		this.collectorBullettinBoard=CollectorBullettinBoard.getInstance();
 	}
 	
-	public void run() throws IOException, IllegalArgumentException, InvalidPinException
+	public void run() throws IOException, IllegalArgumentException, InvalidPinException, NoSuchAlgorithmException
 	{
 		//Displaying choices that the voter has
 		Voter.displayMainMenu();
@@ -51,15 +56,21 @@ public class Voter {
 		this.displayBallot(ballot);
 		System.out.println("Enter your Vote");
 		int vote= Integer.parseInt(reader.readLine());
-		collector.recordVote(PVID1,vote);
+		String encryptedVote=encryptVote(vote);
+		collector.recordVote(PVID1,encryptedVote);
 		break;
 		
 	case 3 ://Verify
 		System.out.println("Verify option selected");
 		System.out.println("Enter PVID");
 		String PVID11 = reader.readLine();
-		System.out.println("Enter Vote");
-		int vote1=Integer.parseInt(reader.readLine());
+		System.out.println("Enter Encrypted Vote");
+		String encryptedVoteToVerify = reader.readLine();
+		if(collectorBullettinBoard.verify(PVID11, Essentials.hashOf(encryptedVoteToVerify)))
+			System.out.println("Your Vote has been recorded correctly");
+		else
+			System.out.println("Your Vote is not recorded correctly");
+		
 		break;
 	default : //Invalid input
 		System.out.println("Invalid Input");
@@ -67,6 +78,11 @@ public class Voter {
 	
 
 }
+	private String encryptVote(int vote) {
+		// TODO Auto-generated method stub
+		
+		return null;
+	}
 
 	private void displayBallot(List<String> ballot) {
 		
