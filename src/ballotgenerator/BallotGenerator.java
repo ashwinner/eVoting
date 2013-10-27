@@ -30,7 +30,7 @@ public class BallotGenerator {
 	public List<String> requestBallot(String pvid) {
 		
 		if(!isValidPVID(pvid))
-			throw InvalidPVIDEception;
+			throw InvalidPvidEception;
 		else
 			return candidateList;
 		
