@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 
+import exceptions.InvalidPvidException;
+
 import authorizer.Authorizer;
 
 public class BallotGenerator {
@@ -27,10 +29,10 @@ public class BallotGenerator {
 		this.authorizer=Authorizer.getInstance();
 	}
 	
-	public List<String> requestBallot(String pvid) {
+	public List<String> requestBallot(String pvid) throws InvalidPvidException {
 		
 		if(!isValidPVID(pvid))
-			throw InvalidPvidEception;
+			throw new InvalidPvidException();
 		else
 			return candidateList;
 		
