@@ -2,6 +2,7 @@ package voter;
 
 import java.io.*;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -68,18 +69,17 @@ public class Voter {
 		this.displayBallot(ballot);
 		System.out.println("Enter your Vote");
 		int vote= Integer.parseInt(reader.readLine());
-		String encryptedVote = this.encryptVote(PVID1, vote);
-		System.out.println(encryptedVote);
-		collector.recordVote(PVID1,encryptedVote);
+		collector.recordVote(PVID1,encryptVote(keyGenerator.generateKey(PVID1),vote));
 		break;
 		
 	case 3 ://Verify
 		System.out.println("Verify option selected");
 		System.out.println("Enter PVID");
 		String PVID11 = reader.readLine();
-		System.out.println("Enter Encrypted Vote");
-		String encryptedVoteToVerify = reader.readLine();
-		if(collectorBullettinBoard.verify(PVID11, Essentials.hashOf(encryptedVoteToVerify)))
+		System.out.println("Enter Your Vote");
+		int voteToVerify=Integer.parseInt(reader.readLine());
+		
+		if(collectorBullettinBoard.verify(PVID11, Essentials.hashOf(encryptVote(keyGenerator.getKey(PVID11),voteToVerify))))
 			System.out.println("Your Vote has been recorded correctly");
 		else
 			System.out.println("Your Vote is not recorded correctly");
@@ -91,13 +91,12 @@ public class Voter {
 	
 
 }
-	private String encryptVote(String pvid, int vote) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidPvidException, IllegalBlockSizeException, BadPaddingException {
+	private static byte[] encryptVote(Key key, int vote) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-		cipher.init(Cipher.ENCRYPT_MODE, keyGenerator.generateKey(pvid));
+		cipher.init(Cipher.ENCRYPT_MODE, key);
 		byte[] encryptedVote = cipher.doFinal(new Integer(vote).toString().getBytes());
-		
-		return new String(encryptedVote);
+		return encryptedVote;
 	}
 
 	private void displayBallot(List<String> ballot) {

@@ -23,11 +23,13 @@ public class Essentials {
 			return false;
 	}
 	
-	public static String hashOf(String encryptedVote) throws NoSuchAlgorithmException {
+	public static byte[] hashOf(byte[] encryptedVote) throws NoSuchAlgorithmException {
 		// TODO Auto-generated method stub
 		MessageDigest msgDigest=MessageDigest.getInstance("MD5");
-		msgDigest.update(encryptedVote.getBytes(), 0, encryptedVote.length());
-		BigInteger hash= new BigInteger(1, msgDigest.digest());
-		return hash.toString(16);
+		msgDigest.update(encryptedVote, 0, encryptedVote.length);
+		BigInteger hash= new BigInteger(msgDigest.digest());
+		return hash.toByteArray();
 	}
+
+	
 }
