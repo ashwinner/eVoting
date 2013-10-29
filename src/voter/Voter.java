@@ -39,8 +39,10 @@ public class Voter {
 		this.keyGenerator = KeyGenerator.getInstance();
 	}
 	
-	public void run() throws IOException, IllegalArgumentException, InvalidPinException, NoSuchAlgorithmException, InvalidPvidException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException
+	public void run() throws IOException, NoSuchAlgorithmException, InvalidPvidException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
 	{
+		try{
+			
 		//Displaying choices that the voter has
 		Voter.displayMainMenu();
 		System.out.println("Please enter your choice");
@@ -87,6 +89,13 @@ public class Voter {
 		break;
 	default : //Invalid input
 		System.out.println("Invalid Input");
+	}
+	
+	} catch (IllegalArgumentException ex) {
+		System.out.println(ex.getMessage());
+	
+	} catch (InvalidPinException ex) {
+		System.out.println("The PIN you entered is invalid");
 	}
 	
 
