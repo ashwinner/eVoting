@@ -26,8 +26,8 @@ public class Main {
 	KeyGenerator keyGenerator = KeyGenerator.getInstance();
 	//Map<String, String> emailIdToPasskeyMap = FileOperations.createEmailToPasskeyMap(args[1]);
 	
-	//Authorizer authorizer = Authorizer.getInstance();
-	//PVIDGenerator pvidGenerator = PVIDGenerator.getInstance(emailIdToPasskeyMap);
+	/*Authorizer authorizer = Authorizer.getInstance();*/
+	//PVIDGenerator pvidGenerator = PVIDGenerator.getInstance(authorizer, emailIdToPasskeyMap);
 	BallotGenerator ballotGenerator=BallotGenerator.getInstance(candidateList);
 	Collector collector=Collector.getInstance();
 	
