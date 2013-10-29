@@ -29,8 +29,9 @@ public class KeyGenerator {
 	}
 	
 	public static KeyGenerator getInstance() throws NoSuchAlgorithmException {
+		
 		if(instance == null)
-			return new KeyGenerator();
+			instance = new KeyGenerator();
 		
 		return instance;
 		

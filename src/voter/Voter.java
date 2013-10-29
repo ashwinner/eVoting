@@ -1,14 +1,23 @@
 package voter;
 
 import java.io.*;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import keygenerator.KeyGenerator;
 
 import pvidgenerator.PVIDGenerator;
 import utils.Essentials;
 import collector.Collector;
 import collector.CollectorBullettinBoard;
 import exceptions.InvalidPinException;
+import exceptions.InvalidPvidException;
 import ballotgenerator.BallotGenerator;
 
 public class Voter {
@@ -17,17 +26,20 @@ public class Voter {
 	private BallotGenerator ballotGenerator;
 	private Collector collector;
 	private CollectorBullettinBoard collectorBullettinBoard;
+	private KeyGenerator keyGenerator;
 	
 	private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	
-	public Voter(BallotGenerator ballotGenerator,Collector collector){
-		//this.pvidGenerator=pvidGenerator;
+	public Voter(PVIDGenerator pvidGenerator, BallotGenerator ballotGenerator,Collector collector) throws NoSuchAlgorithmException{
+		
+		this.pvidGenerator =  pvidGenerator;
 		this.ballotGenerator=ballotGenerator;
 		this.collector=collector;
 		this.collectorBullettinBoard=CollectorBullettinBoard.getInstance();
+		this.keyGenerator = KeyGenerator.getInstance();
 	}
 	
-	public void run() throws IOException, IllegalArgumentException, InvalidPinException, NoSuchAlgorithmException
+	public void run() throws IOException, IllegalArgumentException, InvalidPinException, NoSuchAlgorithmException, InvalidPvidException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException
 	{
 		//Displaying choices that the voter has
 		Voter.displayMainMenu();
@@ -56,7 +68,8 @@ public class Voter {
 		this.displayBallot(ballot);
 		System.out.println("Enter your Vote");
 		int vote= Integer.parseInt(reader.readLine());
-		String encryptedVote=encryptVote(vote);
+		String encryptedVote = this.encryptVote(PVID1, vote);
+		System.out.println(encryptedVote);
 		collector.recordVote(PVID1,encryptedVote);
 		break;
 		
@@ -78,10 +91,13 @@ public class Voter {
 	
 
 }
-	private String encryptVote(int vote) {
-		// TODO Auto-generated method stub
+	private String encryptVote(String pvid, int vote) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidPvidException, IllegalBlockSizeException, BadPaddingException {
 		
-		return null;
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, keyGenerator.generateKey(pvid));
+		byte[] encryptedVote = cipher.doFinal(new Integer(vote).toString().getBytes());
+		
+		return new String(encryptedVote);
 	}
 
 	private void displayBallot(List<String> ballot) {

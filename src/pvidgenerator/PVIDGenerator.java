@@ -33,7 +33,7 @@ public class PVIDGenerator {
 			throw new IllegalArgumentException("emailId " + emailId + " doesnt exist");
 		}
 		
-		if(emailIdToPasskeyMap.get(emailId)!=pin)
+		if(!emailIdToPasskeyMap.get(emailId).equals(pin))
 			throw new InvalidPinException();
 			
 		Blinder blinder = new Blinder(authorizer);

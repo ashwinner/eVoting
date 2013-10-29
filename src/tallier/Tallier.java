@@ -1,6 +1,5 @@
 package tallier;
 
-import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -19,8 +18,8 @@ public class Tallier
 {
 	
 	private static Tallier instance=null;	
-	public static Tallier getInstance() 
-	{
+	
+	public static Tallier getInstance() {
 		
 		if(instance==null){
 		instance=new Tallier();
@@ -28,34 +27,32 @@ public class Tallier
 		return instance;		
 }
 	
-	public Map<String, Integer> tally(Map<String, String> pvidToVoteMap, Map<String,Key> KeyGeneratorMap ,List<String> candidateList ) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
+	public Map<String, Integer> tally(Map<String, String> pvidToVoteMap, Map<String,Key> keyGeneratorMap ,List<String> candidateList ) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		
 		Map<String,Integer> tallyMap;
 		tallyMap=initializeTallyMap(candidateList);
 		
-		Iterator<Entry<String,String>> entries = pvidToVoteMap.entrySet().iterator();
-		while (entries.hasNext()) {
-		  Entry<String,String> thisEntry = (Entry<String, String>) entries.next();
-		  String PVID = (String) thisEntry.getKey();
-		  String EncryptedVote = (String) thisEntry.getValue();
-		  //Get key corresponding to the extracted PVID  from the Key Generator's map
-		  Key key = KeyGeneratorMap.get(PVID);
-		 
-		  //Decrypt the encrypted vote using the key
+		for(Entry<String, String> entry : pvidToVoteMap.entrySet()) {
+			
+		  String PVID = entry.getKey();
+		  String EncryptedVote = entry.getValue();
 
-		  Cipher desCipher; // Create the cipher 
-		  desCipher = Cipher.getInstance("DES/ECB/PKCS5Padding");// Initialize the cipher for encryption
+		  //Get key corresponding to the extracted PVID  from the Key Generator's map
+		  Key key = keyGeneratorMap.get(PVID);
+		 
+		  
+		  // Create and initialize the cipher for encryption
+		  Cipher aesCipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 
 		  // Initialize the cipher for decryption
-		  desCipher.init(Cipher.DECRYPT_MODE,key);
+		  aesCipher.init(Cipher.DECRYPT_MODE, key);
+		  
 		  byte[] text = EncryptedVote.getBytes();
 
 		  // Decrypt the text
-		  byte[] textDecrypted = desCipher.doFinal(text);
+		  byte[] textDecrypted = aesCipher.doFinal(text);
 
-		  System.out.println("Text Decryted : " + new String(textDecrypted));
-		  ByteBuffer wrapped = ByteBuffer.wrap(textDecrypted); // big-endian by default
-		  int value = wrapped.getShort(); // 1
+		  int value = Integer.parseInt(new String(textDecrypted));
 		  String candidate=candidateList.get(value-1);
 		  int count=tallyMap.get(candidate);
 		  tallyMap.put(candidate, ++count);	

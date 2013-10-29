@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import pvidgenerator.PVIDGenerator;
-import authorizer.Authorizer;
 import ballotgenerator.BallotGenerator;
 import utils.FileOperations;
 import tallier.Tallier;
@@ -24,10 +23,9 @@ public class Main {
 	
 	List<String> candidateList = FileOperations.createCandidateList(args[0]);
 	KeyGenerator keyGenerator = KeyGenerator.getInstance();
-	//Map<String, String> emailIdToPasskeyMap = FileOperations.createEmailToPasskeyMap(args[1]);
-	
-	/*Authorizer authorizer = Authorizer.getInstance();*/
-	//PVIDGenerator pvidGenerator = PVIDGenerator.getInstance(authorizer, emailIdToPasskeyMap);
+	Map<String, String> emailIdToPasskeyMap = FileOperations.createEmailToPasskeyMap(args[1]);
+
+	PVIDGenerator pvidGenerator = PVIDGenerator.getInstance(emailIdToPasskeyMap);
 	BallotGenerator ballotGenerator=BallotGenerator.getInstance(candidateList);
 	Collector collector=Collector.getInstance();
 	
@@ -35,12 +33,13 @@ public class Main {
 	
 	while(System.currentTimeMillis()<startTime+TimeUnit.SECONDS.toMillis(30)){
 		
-		Voter voter= new Voter(ballotGenerator,collector);
+		Voter voter= new Voter(pvidGenerator, ballotGenerator, collector);
 		voter.run();
 	}
 	
 	Map<String,String> pvidToEncrpytedVoteMap= collector.getPVIDtoEncryptedVoteMap();
 	Map<String, Key> pvidToKeyMap = keyGenerator.getPvidToKeyMap();
+	
 	Tallier tallier=Tallier.getInstance();
 	Map<String, Integer> tallyMap=tallier.tally(pvidToEncrpytedVoteMap, pvidToKeyMap, candidateList);
 	displayTallyMap(tallyMap);
