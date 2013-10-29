@@ -57,7 +57,7 @@ public class FileOperations {
 		return candidateList;
 	}
 	
-	public static void saveCollectorBullettinBoard(String filename,Serializable object) throws IOException{
+	public static void saveMap(String filename,Serializable object) throws IOException{
 		FileOutputStream fileOut = new FileOutputStream(filename);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(object);

@@ -27,15 +27,15 @@ public class Tallier
 		return instance;		
 }
 	
-	public Map<String, Integer> tally(Map<String, String> pvidToVoteMap, Map<String,Key> keyGeneratorMap ,List<String> candidateList ) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
+	public Map<String, Integer> tally(Map<String, byte[]> pvidToEncrpytedVoteMap, Map<String,Key> keyGeneratorMap ,List<String> candidateList ) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		
 		Map<String,Integer> tallyMap;
 		tallyMap=initializeTallyMap(candidateList);
 		
-		for(Entry<String, String> entry : pvidToVoteMap.entrySet()) {
+		for(Entry<String, byte[]> entry : pvidToEncrpytedVoteMap.entrySet()) {
 			
 		  String PVID = entry.getKey();
-		  String EncryptedVote = entry.getValue();
+		  byte[] EncryptedVote = entry.getValue();
 
 		  //Get key corresponding to the extracted PVID  from the Key Generator's map
 		  Key key = keyGeneratorMap.get(PVID);
@@ -47,7 +47,7 @@ public class Tallier
 		  // Initialize the cipher for decryption
 		  aesCipher.init(Cipher.DECRYPT_MODE, key);
 		  
-		  byte[] text = EncryptedVote.getBytes();
+		  byte[] text = EncryptedVote;
 
 		  // Decrypt the text
 		  byte[] textDecrypted = aesCipher.doFinal(text);

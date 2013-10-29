@@ -1,6 +1,7 @@
 
 package main;
 
+import java.io.Serializable;
 import java.security.Key;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import utils.FileOperations;
 import tallier.Tallier;
 import voter.Voter;
 import collector.Collector;
+import collector.CollectorBullettinBoard;
 import keygenerator.KeyGenerator;
 
 
@@ -31,18 +33,21 @@ public class Main {
 	
 	long startTime=System.currentTimeMillis();
 	
-	while(System.currentTimeMillis()<startTime+TimeUnit.SECONDS.toMillis(30)){
+	while(System.currentTimeMillis()<startTime+TimeUnit.SECONDS.toMillis(150)){
 		
 		Voter voter= new Voter(pvidGenerator, ballotGenerator, collector);
 		voter.run();
 	}
 	
-	Map<String,String> pvidToEncrpytedVoteMap= collector.getPVIDtoEncryptedVoteMap();
+	Map<String, byte[]> pvidToEncrpytedVoteMap= collector.getPVIDtoEncryptedVoteMap();
 	Map<String, Key> pvidToKeyMap = keyGenerator.getPvidToKeyMap();
 	
 	Tallier tallier=Tallier.getInstance();
 	Map<String, Integer> tallyMap=tallier.tally(pvidToEncrpytedVoteMap, pvidToKeyMap, candidateList);
 	displayTallyMap(tallyMap);
+	CollectorBullettinBoard collectorBullettinBoard = CollectorBullettinBoard.getInstance();
+	FileOperations.saveMap("/home/reshma/Desktop/collectorBullettinBoard.txt", (Serializable) collectorBullettinBoard.getCollectorBullettinBoard());
+	FileOperations.saveMap("/home/reshma/Desktop/pvidToKeyMap.txt", (Serializable) keyGenerator.getPvidToKeyMap());
 	
 	
 }
