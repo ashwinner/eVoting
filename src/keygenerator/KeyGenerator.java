@@ -52,5 +52,13 @@ public class KeyGenerator {
 		return pvidToKeyMap;
 	}
 	
+	public Key getKey(String pvid) throws InvalidPvidException {
+		
+		if(!Essentials.isValidPVID(pvid))
+			throw new InvalidPvidException();
+		
+		return pvidToKeyMap.get(pvid);
+	}
+	
 	
 }
