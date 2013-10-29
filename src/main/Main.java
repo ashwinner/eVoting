@@ -1,6 +1,7 @@
 
 package main;
 
+import java.security.Key;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import utils.FileOperations;
 import tallier.Tallier;
 import voter.Voter;
 import collector.Collector;
+import keygenerator.KeyGenerator;
 
 
 public class Main {
@@ -21,6 +23,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 	
 	List<String> candidateList = FileOperations.createCandidateList(args[0]);
+	KeyGenerator keyGenerator = KeyGenerator.getInstance();
 	//Map<String, String> emailIdToPasskeyMap = FileOperations.createEmailToPasskeyMap(args[1]);
 	
 	//Authorizer authorizer = Authorizer.getInstance();
@@ -36,10 +39,10 @@ public class Main {
 		voter.run();
 	}
 	
-	Map<String,Integer> pvidToVoteMap= collector.getPVIDtoVoteMap();
+	Map<String,String> pvidToEncrpytedVoteMap= collector.getPVIDtoEncryptedVoteMap();
+	Map<String, Key> pvidToKeyMap = keyGenerator.getPvidToKeyMap();
 	Tallier tallier=Tallier.getInstance();
-	displayTallyMap(pvidToVoteMap);
-	Map<String, Integer> tallyMap=tallier.tally(pvidToVoteMap, candidateList);
+	Map<String, Integer> tallyMap=tallier.tally(pvidToEncrpytedVoteMap, pvidToKeyMap, candidateList);
 	displayTallyMap(tallyMap);
 	
 	

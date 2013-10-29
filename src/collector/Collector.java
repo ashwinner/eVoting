@@ -10,7 +10,7 @@ import utils.Essentials;
 public class Collector {
 	private static Collector instance=null;
 	private CollectorBullettinBoard collectorBullettinBoard;
-	private static Map<String, String> pvidToVoteMap;
+	private static Map<String, String> pvidToEncryptedVoteMap;
 	
 	public static Collector getInstance()
 	{
@@ -22,16 +22,16 @@ public class Collector {
 	}
 	
 	private Collector() {
-		pvidToVoteMap=new HashMap<String, String>();
-		collectorBullettinBoard= CollectorBullettinBoard.getInstance();
+		pvidToEncryptedVoteMap = new HashMap<String, String>();
+		collectorBullettinBoard = CollectorBullettinBoard.getInstance();
 		
 	}
 	public void recordVote(String PVID, String encryptedVote) throws NoSuchAlgorithmException
 	{
-		pvidToVoteMap.put(PVID,encryptedVote);
+		pvidToEncryptedVoteMap.put(PVID,encryptedVote);
 		collectorBullettinBoard.addEntry(PVID, Essentials.hashOf(encryptedVote));
 	}
-	public Map<String,String> getPVIDtoVoteMap(){
-		return pvidToVoteMap;
+	public Map<String,String> getPVIDtoEncryptedVoteMap(){
+		return pvidToEncryptedVoteMap;
 	}
 }

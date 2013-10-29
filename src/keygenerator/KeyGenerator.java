@@ -13,20 +13,26 @@ import exceptions.InvalidPvidException;
 
 import authorizer.Authorizer;
 
-public class keyGenerator {
+public class KeyGenerator {
 	
-	private static keyGenerator instance = null;
+	private static KeyGenerator instance = null;
 	
-	private Authorizer authorizer;
 	private javax.crypto.KeyGenerator keyGen;
 	private Map<String, Key> pvidToKeyMap;
 	
-	private keyGenerator() throws NoSuchAlgorithmException {
+	private KeyGenerator() throws NoSuchAlgorithmException {
 		
-		this.authorizer = authorizer.getInstance();
 		keyGen = javax.crypto.KeyGenerator.getInstance("AES");
 		keyGen.init(128, new SecureRandom());
 		pvidToKeyMap = new HashMap<String, Key>();
+		
+	}
+	
+	public static KeyGenerator getInstance() throws NoSuchAlgorithmException {
+		if(instance == null)
+			return new KeyGenerator();
+		
+		return instance;
 		
 	}
 	
@@ -39,6 +45,10 @@ public class keyGenerator {
 		pvidToKeyMap.put(pvid, key);
 		
 		return key;
+	}
+	
+	public Map<String, Key> getPvidToKeyMap() {
+		return pvidToKeyMap;
 	}
 	
 	
