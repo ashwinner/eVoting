@@ -9,7 +9,7 @@ public class Authorizer {
 
 	private static Authorizer instance = null;
 	private RSAPrivateKey privateKey;
-	public RSAPublicKey publicKey;
+	private RSAPublicKey publicKey;
 	
 	private Authorizer() {
 		try {

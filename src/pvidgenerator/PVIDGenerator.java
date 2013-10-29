@@ -1,10 +1,11 @@
 package pvidgenerator;
 
 import authorizer.Authorizer;
-import exceptions.InvalidPinException;
 
 import java.math.BigInteger;
 import java.util.*;
+
+import exceptions.InvalidPinException;
 
 public class PVIDGenerator {
 
@@ -13,28 +14,27 @@ public class PVIDGenerator {
 	Authorizer authorizer;
 	Map<String, String> emailIdToPasskeyMap;
 	
-	public static PVIDGenerator getInstance(Authorizer authorizer, Map<String, String> emailIdToPasskeyMap) {
+	public static PVIDGenerator getInstance(Map<String, String> emailIdToPasskeyMap) {
 		
 		if(instance == null) 
-			instance = new PVIDGenerator(authorizer, emailIdToPasskeyMap);
+			instance = new PVIDGenerator(emailIdToPasskeyMap);
 		
 		return instance;
 	}
 	
-	private PVIDGenerator(Authorizer authorizer, Map<String, String> emailIdToPasskeyMap) {
-		this.authorizer=authorizer;
+	private PVIDGenerator(Map<String, String> emailIdToPasskeyMap) {
+		this.authorizer=Authorizer.getInstance();
 		this.emailIdToPasskeyMap=emailIdToPasskeyMap;
 	}
 	
-	public String generatePVID(String emailId, String PIN) throws InvalidPinException, IllegalArgumentException{
+	public String generatePVID(String emailId, String pin) throws IllegalArgumentException, InvalidPinException{
 		
 		if(!emailIdToPasskeyMap.containsKey(emailId)) {
 			throw new IllegalArgumentException("emailId " + emailId + " doesnt exist");
 		}
 		
-		if(!emailIdToPasskeyMap.get(emailId).equals(PIN)) {
+		if(emailIdToPasskeyMap.get(emailId)!=pin)
 			throw new InvalidPinException();
-		}
 			
 		Blinder blinder = new Blinder(authorizer);
 		BigInteger generatedId = new BigInteger("1000" + new BigInteger(32, new Random()).toString());
