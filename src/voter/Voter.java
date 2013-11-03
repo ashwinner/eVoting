@@ -78,14 +78,19 @@ public class Voter {
 		System.out.println("Verify option selected");
 		System.out.println("Enter PVID");
 		String PVID11 = reader.readLine();
-		System.out.println("Enter Your Vote");
-		int voteToVerify=Integer.parseInt(reader.readLine());
-		
-		if(collectorBullettinBoard.verify(PVID11, Essentials.hashOf(encryptVote(keyGenerator.getKey(PVID11),voteToVerify))))
-			System.out.println("Your Vote has been recorded correctly");
+		if(!collectorBullettinBoard.containsPVID(PVID11))
+			System.out.println("You have not voted");
 		else
-			System.out.println("Your Vote is not recorded correctly");
-		
+		{	
+			
+			System.out.println("Enter Your Vote");
+			int voteToVerify=Integer.parseInt(reader.readLine());
+			
+			if(collectorBullettinBoard.verify(PVID11, Essentials.hashOf(encryptVote(keyGenerator.getKey(PVID11),voteToVerify))))
+				System.out.println("Your Vote has been recorded correctly");
+			else
+				System.out.println("Your Vote is not recorded correctly");
+		}
 		break;
 	default : //Invalid input
 		System.out.println("Invalid Input");
