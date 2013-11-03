@@ -54,7 +54,7 @@ public class Voter {
 	
 	case 1 ://generate PVID
 		System.out.println("Generate PVID option selected");
-		System.out.println("Enter your nitc email ID ");
+		System.out.println("Enter your email ID ");
 		String email_id = reader.readLine();
 		System.out.println("Enter your pin/passkey");
 		String pin = reader.readLine();
@@ -92,7 +92,7 @@ public class Voter {
 	}
 	
 	} catch (IllegalArgumentException ex) {
-		System.out.println(ex.getMessage());
+		ex.printStackTrace();
 	
 	} catch (InvalidPinException ex) {
 		System.out.println("The PIN you entered is invalid");
