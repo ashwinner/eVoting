@@ -36,6 +36,12 @@ public class CollectorBullettinBoard {
 		return collectorBullettinBoard;
 		
 	}
-	
+	public boolean containsPVID(String PVID)
+	{
+		if(collectorBullettinBoard.containsKey(PVID))
+			return true;
+		else
+			return false;
+	}
 
 }
